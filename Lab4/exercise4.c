@@ -16,7 +16,7 @@ __attribute__(( naked )) int difference(int a, int b)
             "sub r1, r0, r1 \n"
             "cmp r1, #0 \n"
             "bge pos\n"
-            "mov r4, #0 \n "
+            "mov r4, #0 \n"
             "sub r1, r4, r1 \n"
             "pos: \n"
             "mov r0, r1 \n"
