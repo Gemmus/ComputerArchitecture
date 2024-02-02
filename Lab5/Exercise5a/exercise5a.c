@@ -22,17 +22,17 @@ __attribute__(( naked )) int prt(const char *a)
             /*******************************/
             "mov r4, r0 \n"
 
-            /* Loop until end of line: */
-            "loop_begin: \n"                // loop label
+            /* Loops until end of line: */
+            "loop_begin: \n"                
 
             // Loads value to ro and increment address by one byte:
             "ldrb r0, [r4] \n"              // loads one byte size of value from r4
-            "add r4, r4, #1 \n"             // moved r4 address by one byte
+            "add r4, r4, #1 \n"             // moves r4 address by one byte
 
             // Checks if it's A-Z:
-            "cmp r0, #65 \n"                // Compare r0 value to 'A' (ASCII: 65)
+            "cmp r0, #65 \n"                // compares r0 value to 'A' (ASCII: 65)
             "blt not_uppercase \n"          // if less than, go to label not_uppercase
-            "cmp r0, #90 \n"                // Compare r0 value to 'Z' (ASCII: 90)
+            "cmp r0, #90 \n"                // compares r0 value to 'Z' (ASCII: 90)
             "bgt not_uppercase \n"          // if greater than, go to label not_uppercase
 
             // Converts uppercase to lowercase:
@@ -41,7 +41,7 @@ __attribute__(( naked )) int prt(const char *a)
             // If not uppercase or uppercase has been converted to lowercase:
             "not_uppercase: \n"
 
-            // Compares if it's terminating zero, we don't want NULL in our serial port:
+            // Compares if it's terminating zero, we don't want mini NULL print in our serial port:
             "cmp r0, #0 \n"                 // compares if r0 value is '\0'
             "beq dont_print_null \n"        // if equals, go to dont_print_null label
 
@@ -50,6 +50,7 @@ __attribute__(( naked )) int prt(const char *a)
 
             // Label to skip NULL printing:
             "dont_print_null: \n"
+            
             // Checks if character was terminating zero or not:
             "cmp r0, #0 \n"                 // compares if r0 value is '\0'
             "bne loop_begin \n"             // if not equal, go back to loop_begin
