@@ -87,7 +87,7 @@ __attribute__(( naked )) int prt(const char *a)
             "cmp r0, #90 \n"                // compares r0 value to 'Z' (ASCII: 90)
             "bgt not_uppercase \n"          // if greater than, go to label not_uppercase
 
-            // If uppercase, rotates 13 and checks if it was rolled over:
+            // If uppercase, rotates 13 and checks if it should be rolled over:
             "add r0, r0, #13 \n"
             "cmp r0, #90 \n"
             "ble not_uppercase \n"
@@ -95,12 +95,12 @@ __attribute__(( naked )) int prt(const char *a)
 
             // If it was not uppercase, checks if it's a-z, if not go to label not_letter:
             "not_uppercase: \n"
-            "cmp r0, #97 \n"                // compares r0 value to 'A' (ASCII: 65)
-            "blt not_letter \n"             // if less than, go to label not_uppercase
-            "cmp r0, #122 \n"                // compares r0 value to 'Z' (ASCII: 90)
-            "bgt not_letter \n"             // if greater than, go to label not_uppercase
+            "cmp r0, #97 \n"                // compares r0 value to 'a' (ASCII: 97)
+            "blt not_letter \n"             // if less than, go to label not_letter
+            "cmp r0, #122 \n"                // compares r0 value to 'z' (ASCII: 122)
+            "bgt not_letter \n"             // if greater than, go to label not_letter
 
-            // If lowercase, rotates 13 and checks if it was rolled over:
+            // If lowercase, rotates 13 and checks if it should be rolled over:
             "add r0, r0, #13 \n"
             "cmp r0, #122 \n"
             "ble not_letter \n"
