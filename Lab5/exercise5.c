@@ -19,7 +19,7 @@ __attribute__(( naked )) int prt(const char *a)
             // so you have save the values yourself if you wish to keep
             // them safe. R4-R7 will not be modified by Board_UARTPutChar
 
-#ifdef EXERCISE1
+            #ifdef EXERCISE1
 
             /*******************************/
             /* Beginning of inserted code: */
@@ -27,12 +27,16 @@ __attribute__(( naked )) int prt(const char *a)
 
             "mov r4, r0 \n"
 
-            /* Loops until end of line: */
+            /* Loops until '\0': */
             "loop_begin: \n"
 
             // Loads value to ro and increment address by one byte:
             "ldrb r0, [r4] \n"              // loads one byte size of value from r4
             "add r4, r4, #1 \n"             // moves r4 address by one byte
+
+            // Checks if value is terminating zero, if yes, goes to loop_end:
+            "cmp r0, #0 \n"                 // compares if r0 value is '\0'
+            "beq loop_end \n"               // if equals, go to loop_end label
 
             // Checks if it's A-Z:
             "cmp r0, #65 \n"                // compares r0 value to 'A' (ASCII: 65)
@@ -43,30 +47,25 @@ __attribute__(( naked )) int prt(const char *a)
             // Converts uppercase to lowercase:
             "add r0, r0, #32 \n"            // adds difference between ASCII codes of upper- and lowercase
 
-            // If not uppercase or uppercase has been converted to lowercase:
+            // If not uppercase or letter:
             "not_uppercase: \n"
 
-            // Compares if it's terminating zero, we don't want mini NULL print in our serial port:
-            "cmp r0, #0 \n"                 // compares if r0 value is '\0'
-            "beq dont_print_null \n"        // if equals, go to dont_print_null label
-
-            // Otherwise print character:
+            // Print character:
             "bl putchar \n"
 
-            // Label to skip NULL printing:
-            "dont_print_null: \n"
+            // Goes back to loop_begin:
+            "bl loop_begin \n"
 
-            // Checks if character was terminating zero or not:
-            "cmp r0, #0 \n"                 // compares if r0 value is '\0'
-            "bne loop_begin \n"             // if not equal, go back to loop_begin
+            /* Label when '\0' is met: */
+            "loop_end: \n"
 
             /************************/
             /* End of inserted code */
             /************************/
 
-#endif
+            #endif
 
-#ifdef EXERCISE2
+            #ifdef EXERCISE2
 
             /*******************************/
             /* Beginning of inserted code: */
@@ -74,12 +73,16 @@ __attribute__(( naked )) int prt(const char *a)
 
             "mov r4, r0 \n"
 
-            /* Loops until end of line: */
+            /* Loops until '\0': */
             "loop_begin: \n"
 
             // Loads value to ro and increment address by one byte:
             "ldrb r0, [r4] \n"              // loads one byte size of value from r4
             "add r4, r4, #1 \n"             // moves r4 address by one byte
+
+            // Checks if value is terminating zero, if yes, goes to loop_end:
+            "cmp r0, #0 \n"                 // compares if r0 value is '\0'
+            "beq loop_end \n"               // if equals, go to loop_end label
 
             // Checks if it's A-Z, if not go to label not_uppercase:
             "cmp r0, #65 \n"                // compares r0 value to 'A' (ASCII: 65)
@@ -106,31 +109,26 @@ __attribute__(( naked )) int prt(const char *a)
             "ble not_letter \n"
             "sub r0, r0, #26 \n"
 
-            // If not a letter, come to this label
+            // If not a letter, come to this label:
             "not_letter: \n"
 
-            // Compares if it's terminating zero, we don't want mini NULL print in our serial port:
-            "cmp r0, #0 \n"                 // compares if r0 value is '\0'
-            "beq dont_print_null \n"        // if equals, go to dont_print_null label
-
-            // Otherwise print character:
+            // Print character:
             "bl putchar \n"
 
-            // Label to skip NULL printing:
-            "dont_print_null: \n"
+            // Goes back to loop_begin:
+            "bl loop_begin \n"
 
-            // Checks if character was terminating zero or not:
-            "cmp r0, #0 \n"                 // compares if r0 value is '\0'
-            "bne loop_begin \n"             // if not equal, go back to loop_begin
+            /* Label when '\0' is met: */
+            "loop_end: \n"
 
             /************************/
             /* End of inserted code */
             /************************/
 
-#endif
+            #endif
 
             "pop { r4, pc } \n" // cortex-M0 requires popping to PC if LR was pushed
-            // popping to PC will cause return from subroutine (~same as "bx lr")
+        // popping to PC will cause return from subroutine (~same as "bx lr")
             );
 }
 
